@@ -7,6 +7,8 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+
+	"sigs.k8s.io/yaml"
 )
 
 type Body struct {
@@ -38,7 +40,7 @@ type Test struct {
 }
 
 type Result struct {
-	TestNumber  string `json: "test_number,omitempty"`
+	TestNumber  string `json: "test_number"`
 	TestDesc    string `json: "test_desc,omitempty"`
 	Audit       string `json: "audit,omitempty"`
 	AuditEnv    string `json: "AuditEnv,omitempty"`
@@ -88,6 +90,14 @@ func main() {
 	fmt.Println(body.Controls[0].Tests[0].Fail)
 	fmt.Println(body.Controls[0].Tests[0].Results[0].Status)
 	fmt.Println(body.Totals.TotalPass) // not showing correct output
+
+	// Prints entire json as yaml (Caution: A few fields are buggy, to be fixed)
+	y, err := yaml.Marshal(body)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+		return
+	}
+	fmt.Println(string(y))
 }
 
 func runKubeBench() string {
