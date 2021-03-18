@@ -1,0 +1,2148 @@
+Controls:
+- TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+  id: "1"
+  node_type: master
+  tests:
+  - Desc: Master Node Configuration Files
+    Fail: 17
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-apiserver.yaml;
+        then stat -c permissions=%a /etc/kubernetes/manifests/kube-apiserver.yaml;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the
+        master node.
+        For example, chmod 644 /etc/kubernetes/manifests/kube-apiserver.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-apiserver.yaml;
+        then stat -c %U:%G /etc/kubernetes/manifests/kube-apiserver.yaml; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/manifests/kube-apiserver.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-controller-manager.yaml;
+        then stat -c permissions=%a /etc/kubernetes/manifests/kube-controller-manager.yaml;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/manifests/kube-controller-manager.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-controller-manager.yaml;
+        then stat -c %U:%G /etc/kubernetes/manifests/kube-controller-manager.yaml;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/manifests/kube-controller-manager.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-scheduler.yaml;
+        then stat -c permissions=%a /etc/kubernetes/manifests/kube-scheduler.yaml;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/manifests/kube-scheduler.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/kube-scheduler.yaml;
+        then stat -c %U:%G /etc/kubernetes/manifests/kube-scheduler.yaml; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/manifests/kube-scheduler.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/etcd.yaml; then find
+        /etc/kubernetes/manifests/etcd.yaml -name '*etcd*' | xargs stat -c permissions=%a;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: true
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/manifests/etcd.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/manifests/etcd.yaml; then find
+        /etc/kubernetes/manifests/etcd.yaml -name '*etcd*' | xargs stat -c %U:%G;
+        fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: true
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/manifests/etcd.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: stat -c permissions=%a <path/to/cni/files>
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 <path/to/cni/files>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: stat -c %U:%G <path/to/cni/files>
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root <path/to/cni/files>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ps -ef | grep etcd | grep -- --data-dir | sed 's%.*data-dir[= ]\([^ ]*\).*%\1%'
+        | xargs stat -c permissions=%a
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        On the etcd server node, get the etcd data directory, passed as an argument --data-dir,
+        from the below command:
+        ps -ef | grep etcd
+        Run the below command (based on the etcd data directory found above). For example,
+        chmod 700 /var/lib/etcd
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: ps -ef | grep etcd | grep -- --data-dir | sed 's%.*data-dir[= ]\([^ ]*\).*%\1%'
+        | xargs stat -c %U:%G
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        On the etcd server node, get the etcd data directory, passed as an argument --data-dir,
+        from the below command:
+        ps -ef | grep etcd
+        Run the below command (based on the etcd data directory found above).
+        For example, chown etcd:etcd /var/lib/etcd
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/admin.conf; then stat -c permissions=%a
+        /etc/kubernetes/admin.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/admin.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/admin.conf; then stat -c %U:%G
+        /etc/kubernetes/admin.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/admin.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/scheduler.conf; then stat -c permissions=%a
+        /etc/kubernetes/scheduler.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/scheduler.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/scheduler.conf; then stat -c %U:%G
+        /etc/kubernetes/scheduler.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/scheduler.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/controller-manager.conf; then
+        stat -c permissions=%a /etc/kubernetes/controller-manager.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod 644 /etc/kubernetes/controller-manager.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/sh -c 'if test -e /etc/kubernetes/controller-manager.conf; then
+        stat -c %U:%G /etc/kubernetes/controller-manager.conf; fi'
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown root:root /etc/kubernetes/controller-manager.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: find /etc/kubernetes/pki/ | xargs stat -c %U:%G
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: true
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chown -R root:root /etc/kubernetes/pki/
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: find /etc/kubernetes/pki -name '*.crt' | xargs stat -c permissions=%a
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: true
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod -R 644 /etc/kubernetes/pki/*.crt
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: find /etc/kubernetes/pki -name '*.key' | xargs stat -c permissions=%a
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: true
+      Remediation: |
+        Run the below command (based on the file location on your system) on the master node.
+        For example,
+        chmod -R 600 /etc/kubernetes/pki/*.key
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "1.1"
+    Type: ""
+    Warn: 4
+  - Desc: API Server
+    Fail: 7
+    Info: 0
+    Pass: 21
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the below parameter.
+        --anonymous-auth=false
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and configure alternate mechanisms for authentication. Then,
+        edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and remove the --basic-auth-file=<filename> parameter.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and configure alternate mechanisms for authentication. Then,
+        edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and remove the --token-auth-file=<filename> parameter.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and remove the --kubelet-https parameter.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set up the TLS connection between the
+        apiserver and kubelets. Then, edit API server pod specification file
+        /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the
+        kubelet client certificate and key parameters as below.
+        --kubelet-client-certificate=<path/to/client-certificate-file>
+        --kubelet-client-key=<path/to/client-key-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and setup the TLS connection between
+        the apiserver and kubelets. Then, edit the API server pod specification file
+        /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the
+        --kubelet-certificate-authority parameter to the path to the cert file for the certificate authority.
+        --kubelet-certificate-authority=<ca-string>
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --authorization-mode parameter to values other than AlwaysAllow.
+        One such example could be as below.
+        --authorization-mode=RBAC
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --authorization-mode parameter to a value that includes Node.
+        --authorization-mode=Node,RBAC
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --authorization-mode parameter to a value that includes RBAC,
+        for example:
+        --authorization-mode=Node,RBAC
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set the desired limits in a configuration file.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        and set the below parameters.
+        --enable-admission-plugins=...,EventRateLimit,...
+        --admission-control-config-file=<path/to/configuration/file>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and either remove the --enable-admission-plugins parameter, or set it to a
+        value that does not include AlwaysAdmit.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --enable-admission-plugins parameter to include
+        AlwaysPullImages.
+        --enable-admission-plugins=...,AlwaysPullImages,...
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --enable-admission-plugins parameter to include
+        SecurityContextDeny, unless PodSecurityPolicy is already in place.
+        --enable-admission-plugins=...,SecurityContextDeny,...
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and create ServiceAccount objects as per your environment.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and ensure that the --disable-admission-plugins parameter is set to a
+        value that does not include ServiceAccount.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --disable-admission-plugins parameter to
+        ensure it does not include NamespaceLifecycle.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and create Pod Security Policy objects as per your environment.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --enable-admission-plugins parameter to a
+        value that includes PodSecurityPolicy:
+        --enable-admission-plugins=...,PodSecurityPolicy,...
+        Then restart the API Server.
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and configure NodeRestriction plug-in on kubelets.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --enable-admission-plugins parameter to a
+        value that includes NodeRestriction.
+        --enable-admission-plugins=...,NodeRestriction,...
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and remove the --insecure-bind-address parameter.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the below parameter.
+        --insecure-port=0
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and either remove the --secure-port parameter or
+        set it to a different (non-zero) desired port.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the below parameter.
+        --profiling=false
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --audit-log-path parameter to a suitable path and
+        file where you would like audit logs to be written, for example:
+        --audit-log-path=/var/log/apiserver/audit.log
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --audit-log-maxage parameter to 30 or as an appropriate number of days:
+        --audit-log-maxage=30
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --audit-log-maxbackup parameter to 10 or to an appropriate
+        value.
+        --audit-log-maxbackup=10
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --audit-log-maxsize parameter to an appropriate size in MB.
+        For example, to set it as 100 MB:
+        --audit-log-maxsize=100
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        and set the below parameter as appropriate and if needed.
+        For example,
+        --request-timeout=300s
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the below parameter.
+        --service-account-lookup=true
+        Alternatively, you can delete the --service-account-lookup parameter from this file so
+        that the default takes effect.
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --service-account-key-file parameter
+        to the public key file for service accounts:
+        --service-account-key-file=<filename>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set up the TLS connection between the apiserver and etcd.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the etcd certificate and key file parameters.
+        --etcd-certfile=<path/to/client-certificate-file>
+        --etcd-keyfile=<path/to/client-key-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set up the TLS connection on the apiserver.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the TLS certificate and private key file parameters.
+        --tls-cert-file=<path/to/tls-certificate-file>
+        --tls-private-key-file=<path/to/tls-key-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set up the TLS connection on the apiserver.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the client certificate authority file.
+        --client-ca-file=<path/to/client-ca-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and set up the TLS connection between the apiserver and etcd.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the etcd certificate authority file parameter.
+        --etcd-cafile=<path/to/ca-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and configure a EncryptionConfig file.
+        Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the --encryption-provider-config parameter to the path of that file: --encryption-provider-config=</path/to/EncryptionConfig/File>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and configure a EncryptionConfig file.
+        In this file, choose aescbc, kms or secretbox as the encryption provider.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml
+        on the master node and set the below parameter.
+        --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM
+        _SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM
+        _SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM
+        _SHA384
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "1.2"
+    Type: ""
+    Warn: 7
+  - Desc: Controller Manager
+    Fail: 1
+    Info: 0
+    Pass: 5
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and set the --terminated-pod-gc-threshold to an appropriate threshold,
+        for example:
+        --terminated-pod-gc-threshold=10
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and set the below parameter.
+        --profiling=false
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node to set the below parameter.
+        --use-service-account-credentials=true
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and set the --service-account-private-key-file parameter
+        to the private key file for service accounts.
+        --service-account-private-key-file=<filename>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and set the --root-ca-file parameter to the certificate bundle file`.
+        --root-ca-file=<path/to/file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and set the --feature-gates parameter to include RotateKubeletServerCertificate=true.
+        --feature-gates=RotateKubeletServerCertificate=true
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-controller | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Controller Manager pod specification file /etc/kubernetes/manifests/kube-controller-manager.yaml
+        on the master node and ensure the correct value for the --bind-address parameter
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "1.3"
+    Type: ""
+    Warn: 1
+  - Desc: Scheduler
+    Fail: 1
+    Info: 0
+    Pass: 1
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-scheduler | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Scheduler pod specification file /etc/kubernetes/manifests/kube-scheduler.yaml file
+        on the master node and set the below parameter.
+        --profiling=false
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-scheduler | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the Scheduler pod specification file /etc/kubernetes/manifests/kube-scheduler.yaml
+        on the master node and ensure the correct value for the --bind-address parameter
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "1.4"
+    Type: ""
+    Warn: 0
+  text: Master Node Security Configuration
+  version: "1.6"
+- TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+  id: "2"
+  node_type: etcd
+  tests:
+  - Desc: Etcd Node Configuration Files
+    Fail: 0
+    Info: 0
+    Pass: 7
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the etcd service documentation and configure TLS encryption.
+        Then, edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml
+        on the master node and set the below parameters.
+        --cert-file=</path/to/ca-file>
+        --key-file=</path/to/key-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master
+        node and set the below parameter.
+        --client-cert-auth="true"
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master
+        node and either remove the --auto-tls parameter or set it to false.
+          --auto-tls=false
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the etcd service documentation and configure peer TLS encryption as appropriate
+        for your etcd cluster.
+        Then, edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the
+        master node and set the below parameters.
+        --peer-client-file=</path/to/peer-cert-file>
+        --peer-key-file=</path/to/peer-key-file>
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master
+        node and set the below parameter.
+        --peer-client-cert-auth=true
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master
+        node and either remove the --peer-auto-tls parameter or set it to false.
+        --peer-auto-tls=false
+      Scored: true
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -ef | /bin/grep etcd | /bin/grep -v grep
+      AuditConfig: ""
+      AuditEnv: cat "/proc/$(/bin/ps -C etcd -o pid= | tr -d ' ')/environ" | tr '\0'
+        '\n'
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        [Manual test]
+        Follow the etcd documentation and create a dedicated certificate authority setup for the
+        etcd service.
+        Then, edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the
+        master node and set the below parameter.
+        --trusted-ca-file=</path/to/ca-file>
+      Scored: false
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "2"
+    Type: ""
+    Warn: 0
+  text: Etcd Node Configuration
+  version: "1.6"
+- TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+  id: "3"
+  node_type: controlplane
+  tests:
+  - Desc: Authentication and Authorization
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Alternative mechanisms provided by Kubernetes such as the use of OIDC should be
+        implemented in place of client certificates.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "3.1"
+    Type: ""
+    Warn: 1
+  - Desc: Logging
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -ef | grep kube-apiserver | grep -v grep
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create an audit policy file for your cluster.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Consider modification of the audit policy in use on the cluster to include these items, at a
+        minimum.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "3.2"
+    Type: ""
+    Warn: 2
+  text: Control Plane Configuration
+  version: "1.6"
+- TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+  id: "4"
+  node_type: node
+  tests:
+  - Desc: Worker Node Configuration Files
+    Fail: 5
+    Info: 0
+    Pass: 2
+    Results:
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/systemd/system/kubelet.service.d/10-kubeadm.conf;
+        then stat -c permissions=%a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf;
+        fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example,
+        chmod 644 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/systemd/system/kubelet.service.d/10-kubeadm.conf;
+        then stat -c %U:%G /etc/systemd/system/kubelet.service.d/10-kubeadm.conf;
+        fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example,
+        chown root:root /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/kubernetes/proxy.conf; then stat -c permissions=%a
+        /etc/kubernetes/proxy.conf; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example,
+        chmod 644 /etc/kubernetes/proxy.conf
+      Scored: false
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/kubernetes/proxy.conf; then stat -c %U:%G
+        /etc/kubernetes/proxy.conf; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example, chown root:root /etc/kubernetes/proxy.conf
+      Scored: false
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/kubernetes/kubelet.conf; then stat -c permissions=%a
+        /etc/kubernetes/kubelet.conf; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example,
+        chmod 644 /etc/kubernetes/kubelet.conf
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /etc/kubernetes/kubelet.conf; then stat -c %U:%G
+        /etc/kubernetes/kubelet.conf; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the below command (based on the file location on your system) on the each worker node.
+        For example,
+        chown root:root /etc/kubernetes/kubelet.conf
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: |
+        CAFILE=$(ps -ef | grep kubelet | grep -v apiserver | grep -- --client-ca-file= | awk -F '--client-ca-file=' '{print $2}' | awk '{print $1}')
+        if test -z $CAFILE; then CAFILE=/etc/kubernetes/pki/ca.crt; fi
+        if test -e $CAFILE; then stat -c permissions=%a $CAFILE; fi
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the following command to modify the file permissions of the
+        --client-ca-file chmod 644 <filename>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: |
+        CAFILE=$(ps -ef | grep kubelet | grep -v apiserver | grep -- --client-ca-file= | awk -F '--client-ca-file=' '{print $2}' | awk '{print $1}')
+        if test -z $CAFILE; then CAFILE=/etc/kubernetes/pki/ca.crt; fi
+        if test -e $CAFILE; then stat -c %U:%G $CAFILE; fi
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the following command to modify the ownership of the --client-ca-file.
+        chown root:root <filename>
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /var/lib/kubelet/config.yaml; then stat -c permissions=%a
+        /var/lib/kubelet/config.yaml; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the following command (using the config file location identified in the Audit step)
+        chmod 644 /var/lib/kubelet/config.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/sh -c ''if test -e /var/lib/kubelet/config.yaml; then stat -c %U:%G
+        /var/lib/kubelet/config.yaml; fi'' '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Run the following command (using the config file location identified in the Audit step)
+        chown root:root /var/lib/kubelet/config.yaml
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "4.1"
+    Type: ""
+    Warn: 3
+  - Desc: Kubelet
+    Fail: 5
+    Info: 0
+    Pass: 1
+    Results:
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set authentication: anonymous: enabled to
+        false.
+        If using executable arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.
+        --anonymous-auth=false
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set authorization: mode to Webhook. If
+        using executable arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_AUTHZ_ARGS variable.
+        --authorization-mode=Webhook
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set authentication: x509: clientCAFile to
+        the location of the client CA file.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_AUTHZ_ARGS variable.
+        --client-ca-file=<path/to/client-ca-file>
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set readOnlyPort to 0.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.
+        --read-only-port=0
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set streamingConnectionIdleTimeout to a
+        value other than 0.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.
+        --streaming-connection-idle-timeout=5m
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set protectKernelDefaults: true.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.
+        --protect-kernel-defaults=true
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set makeIPTablesUtilChains: true.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        remove the --make-iptables-util-chains argument from the
+        KUBELET_SYSTEM_PODS_ARGS variable.
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: true
+      Status: FAIL
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: '/bin/ps -fC kubelet '
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+        on each worker node and remove the --hostname-override argument from the
+        KUBELET_SYSTEM_PODS_ARGS variable.
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: PASS
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set eventRecordQPS: to an appropriate level.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameter in KUBELET_SYSTEM_PODS_ARGS variable.
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set tlsCertFile to the location
+        of the certificate file to use to identify this Kubelet, and tlsPrivateKeyFile
+        to the location of the corresponding private key file.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the below parameters in KUBELET_CERTIFICATE_ARGS variable.
+        --tls-cert-file=<path/to/tls-certificate-file>
+        --tls-private-key-file=<path/to/tls-key-file>
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to add the line rotateCertificates: true or
+        remove it altogether to use the default value.
+        If using command line arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        remove --rotate-certificates=false argument from the KUBELET_CERTIFICATE_ARGS
+        variable.
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Edit the kubelet service file /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+        on each worker node and set the below parameter in KUBELET_CERTIFICATE_ARGS variable.
+        --feature-gates=RotateKubeletServerCertificate=true
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    - ActualValue: ""
+      Audit: /bin/ps -fC kubelet
+      AuditConfig: /bin/cat /var/lib/kubelet/config.yaml
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If using a Kubelet config file, edit the file to set TLSCipherSuites: to
+        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
+        or to a subset of these values.
+        If using executable arguments, edit the kubelet service file
+        /etc/systemd/system/kubelet.service.d/10-kubeadm.conf on each worker node and
+        set the --tls-cipher-suites parameter as follows, or to a subset of these values.
+        --tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_128_GCM_SHA256
+        Based on your system, restart the kubelet service. For example:
+        systemctl daemon-reload
+        systemctl restart kubelet.service
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: ""
+    Section: "4.2"
+    Type: ""
+    Warn: 7
+  text: Worker Node Security Configuration
+  version: "1.6"
+- TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+  id: "5"
+  node_type: policies
+  tests:
+  - Desc: RBAC and Service Accounts
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Identify all clusterrolebindings to the cluster-admin role. Check if they are used and
+        if they need this role or if they could use a role with fewer privileges.
+        Where possible, first bind users to a lower privileged role and then remove the
+        clusterrolebinding to the cluster-admin role :
+        kubectl delete clusterrolebinding [name]
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Where possible, remove get, list and watch access to secret objects in the cluster.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Where possible replace any use of wildcards in clusterroles and roles with specific
+        objects or actions.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Where possible, remove create access to pod objects in the cluster.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create explicit service accounts wherever a Kubernetes workload requires specific access
+        to the Kubernetes API server.
+        Modify the configuration of each default service account to include this value
+        automountServiceAccountToken: false
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Modify the definition of pods and service accounts which do not need to mount service
+        account tokens to disable it.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.1"
+    Type: ""
+    Warn: 6
+  - Desc: Pod Security Policies
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that
+        the .spec.privileged field is omitted or set to false.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.hostPID field is omitted or set to false.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.hostIPC field is omitted or set to false.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.hostNetwork field is omitted or set to false.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.allowPrivilegeEscalation field is omitted or set to false.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.runAsUser.rule is set to either MustRunAsNonRoot or MustRunAs with the range of
+        UIDs not including 0.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Create a PSP as described in the Kubernetes documentation, ensuring that the
+        .spec.requiredDropCapabilities is set to include either NET_RAW or ALL.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Ensure that allowedCapabilities is not present in PSPs for the cluster unless
+        it is set to an empty array.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Review the use of capabilites in applications runnning on your cluster. Where a namespace
+        contains applicaions which do not require any Linux capabities to operate consider adding
+        a PSP which forbids the admission of containers which do not drop all capabilities.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.2"
+    Type: ""
+    Warn: 9
+  - Desc: Network Policies and CNI
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        If the CNI plugin in use does not support network policies, consideration should be given to
+        making use of a different plugin, or finding an alternate mechanism for restricting traffic
+        in the Kubernetes cluster.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and create NetworkPolicy objects as you need them.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.3"
+    Type: ""
+    Warn: 2
+  - Desc: Secrets Management
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        if possible, rewrite application code to read secrets from mounted secret files, rather than
+        from environment variables.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Refer to the secrets management options offered by your cloud provider or a third-party
+        secrets management solution.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.4"
+    Type: ""
+    Warn: 2
+  - Desc: Extensible Admission Control
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and setup image provenance.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.5"
+    Type: ""
+    Warn: 1
+  - Desc: General Policies
+    Fail: 0
+    Info: 0
+    Pass: 0
+    Results:
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the documentation and create namespaces for objects in your deployment as you need
+        them.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Seccomp is an alpha feature currently. By default, all alpha features are disabled. So, you
+        would need to enable alpha features in the apiserver by passing "--feature-
+        gates=AllAlpha=true" argument.
+        Edit the /etc/kubernetes/apiserver file on the master node and set the KUBE_API_ARGS
+        parameter to "--feature-gates=AllAlpha=true"
+        KUBE_API_ARGS="--feature-gates=AllAlpha=true"
+        Based on your system, restart the kube-apiserver service. For example:
+        systemctl restart kube-apiserver.service
+        Use annotations to enable the docker/default seccomp profile in your pod definitions. An
+        example is as below:
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: trustworthy-pod
+          annotations:
+            seccomp.security.alpha.kubernetes.io/pod: docker/default
+        spec:
+          containers:
+            - name: trustworthy-container
+              image: sotrustworthy:latest
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Follow the Kubernetes documentation and apply security contexts to your pods. For a
+        suggested list of security contexts, you may refer to the CIS Security Benchmark for Docker
+        Containers.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    - ActualValue: ""
+      Audit: ""
+      AuditConfig: ""
+      AuditEnv: ""
+      ExpectedResult: ""
+      IsMultiple: false
+      Remediation: |
+        Ensure that namespaces are created to allow for appropriate segregation of Kubernetes
+        resources and that all new resources are created in a specific namespace.
+      Scored: false
+      Status: WARN
+      TestDesc: ""
+      TestNumber: ""
+      Type: manual
+    Section: "5.7"
+    Type: ""
+    Warn: 4
+  text: Kubernetes Policies
+  version: "1.6"
+Totals:
+  TotalFail: 0
+  TotalInfo: 0
+  TotalPass: 0
+  TotalWarn: 0
+
