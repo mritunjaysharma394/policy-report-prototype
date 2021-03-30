@@ -2,13 +2,22 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
-	"sigs.k8s.io/yaml"
+	"k8s.io/client-go/tools/clientcmd"
+	appsv1aplha1 "k8s.io/sample-controller/pkg/apis/wgpolicyk8s.io/v1alpha1"
+
+	client "github.com/policy-report-prototype/pkg/generated/clientset/versioned"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"k8s.io/client-go/util/homedir"
 )
 
 type OverallControls struct {
@@ -180,19 +189,50 @@ func main() {
 	// 	}
 	// }
 
-	fmt.Println(body.Controls[0].ID)
-	fmt.Println(body.Controls[1].Summary) //not showing correct output
+	//fmt.Println(body.Controls[0].ID)
+	//fmt.Println(body.Controls[1].Summary) //not showing correct output
 	// fmt.Println(body.Controls[0].Tests[0].Fail)
 	// fmt.Println(body.Controls[0].Tests[0].Results[0].Status)
 	// fmt.Println(body.Totals.TotalPass) // not showing correct output
 
 	// Prints entire json as yaml (Caution: A few fields are buggy, to be fixed)
-	y, err := yaml.Marshal(body)
-	if err != nil {
-		fmt.Printf("err: %v\n", err)
-		return
+	// y, err := yaml.Marshal(body)
+	// if err != nil {
+	// 	fmt.Printf("err: %v\n", err)
+	// 	return
+	// }
+	// fmt.Println(string(y))
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
 	}
-	fmt.Println(string(y))
+	flag.Parse()
+
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	if err != nil {
+		panic(err)
+	}
+	clientset, err := client.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
+
+	ats := clientset.Wgpolicyk8sV1alpha1().PolicyReports("default")
+	deployment := &appsv1aplha1.PolicyReport{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "sample-policy-report",
+		},
+	}
+
+	// Create Deployment
+	fmt.Println("Creating policy-report...")
+	result, err := ats.Create(context.TODO(), deployment, metav1.CreateOptions{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
 }
 
 func runKubeBench() string {
