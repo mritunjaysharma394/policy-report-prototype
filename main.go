@@ -202,6 +202,7 @@ func main() {
 	// 	return
 	// }
 	// fmt.Println(string(y))
+
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -222,11 +223,16 @@ func main() {
 	ats := clientset.Wgpolicyk8sV1alpha1().PolicyReports("default")
 	deployment := &appsv1aplha1.PolicyReport{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "sample-policy-report",
+			Name: "cis-dummy-policy-report",
+		},
+		Summary: appsv1aplha1.PolicyReportSummary{
+			Pass: body.Controls[1].Summary.Pass,
+			Fail: body.Controls[1].Summary.Fail,
+			Warn: body.Controls[1].Summary.Warn,
 		},
 	}
 
-	// Create Deployment
+	// Create Policy-Report
 	fmt.Println("Creating policy-report...")
 	result, err := ats.Create(context.TODO(), deployment, metav1.CreateOptions{})
 	if err != nil {
