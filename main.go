@@ -17,6 +17,8 @@ import (
 	client "github.com/policy-report-prototype/pkg/generated/clientset/versioned"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+	"strconv"
+
 	"k8s.io/client-go/util/homedir"
 )
 
@@ -100,39 +102,26 @@ const (
 // Check contains information about a recommendation in the
 // CIS Kubernetes document.
 type Check struct {
-	ID                string   `yaml:"id" json:"test_number"`
-	Text              string   `json:"test_desc"`
-	Audit             string   `json:"audit"`
-	AuditEnv          string   `yaml:"audit_env"`
-	AuditConfig       string   `yaml:"audit_config"`
-	Type              string   `json:"type"`
-	Tests             *tests   `json:"-"`
+	ID          string `yaml:"id" json:"test_number"`
+	Text        string `json:"test_desc"`
+	Audit       string `json:"audit"`
+	AuditEnv    string `yaml:"audit_env"`
+	AuditConfig string `yaml:"audit_config"`
+	Type        string `json:"type"`
+	// Tests             *tests   `json:"-"`
 	Set               bool     `json:"-"`
 	Remediation       string   `json:"remediation"`
 	TestInfo          []string `json:"test_info"`
-	State             `json:"status"`
-	ActualValue       string `json:"actual_value"`
-	Scored            bool   `json:"scored"`
-	IsMultiple        bool   `yaml:"use_multiple_values"`
-	ExpectedResult    string `json:"expected_result"`
-	Reason            string `json:"reason,omitempty"`
-	AuditOutput       string `json:"-"`
-	AuditEnvOutput    string `json:"-"`
-	AuditConfigOutput string `json:"-"`
-	DisableEnvTesting bool   `json:"-"`
-}
-
-type binOp string
-
-const (
-	and                   binOp = "and"
-	or                          = "or"
-	defaultArraySeparator       = ","
-)
-
-type tests struct {
-	TestItems []*testItem `yaml:"test_items"`
-	BinOp     binOp       `yaml:"bin_op"`
+	State             string   `json:"status"`
+	ActualValue       string   `json:"actual_value"`
+	Scored            bool     `json:"scored"`
+	IsMultiple        bool     `yaml:"use_multiple_values"`
+	ExpectedResult    string   `json:"expected_result"`
+	Reason            string   `json:"reason,omitempty"`
+	AuditOutput       string   `json:"-"`
+	AuditEnvOutput    string   `json:"-"`
+	AuditConfigOutput string   `json:"-"`
+	DisableEnvTesting bool     `json:"-"`
 }
 
 type AuditUsed string
@@ -142,30 +131,6 @@ const (
 	AuditConfig  AuditUsed = "auditConfig"
 	AuditEnv     AuditUsed = "auditEnv"
 )
-
-type testItem struct {
-	Flag             string
-	Env              string
-	Path             string
-	Output           string
-	Value            string
-	Set              bool
-	Compare          compare
-	isMultipleOutput bool
-	auditUsed        AuditUsed
-}
-
-type compare struct {
-	Op    string
-	Value string
-}
-
-type testOutput struct {
-	testResult     bool
-	flagFound      bool
-	actualResult   string
-	ExpectedResult string
-}
 
 func main() {
 
@@ -179,30 +144,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// for {
-	// 	err := decoder.Decode(&body)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	if err == io.EOF {
-	// 		break
-	// 	}
-	// }
-
-	//fmt.Println(body.Controls[0].ID)
-	//fmt.Println(body.Controls[1].Summary) //not showing correct output
-	// fmt.Println(body.Controls[0].Tests[0].Fail)
-	// fmt.Println(body.Controls[0].Tests[0].Results[0].Status)
-	// fmt.Println(body.Totals.TotalPass) // not showing correct output
-
-	// Prints entire json as yaml (Caution: A few fields are buggy, to be fixed)
-	// y, err := yaml.Marshal(body)
-	// if err != nil {
-	// 	fmt.Printf("err: %v\n", err)
-	// 	return
-	// }
-	// fmt.Println(string(y))
-
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -223,15 +164,22 @@ func main() {
 	ats := clientset.Wgpolicyk8sV1alpha1().PolicyReports("default")
 	deployment := &appsv1aplha1.PolicyReport{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "cis-dummy-policy-report",
+			Name: "cis-dummy-policy",
 		},
 		Summary: appsv1aplha1.PolicyReportSummary{
-			Pass: body.Controls[1].Summary.Pass,
-			Fail: body.Controls[1].Summary.Fail,
-			Warn: body.Controls[1].Summary.Warn,
+			Pass: body.Totals.Pass,
+			Fail: body.Totals.Fail,
+			Warn: body.Totals.Warn,
 		},
 	}
 
+	for i := 0; i < 5; i++ {
+		for j := 0; j < len(body.Controls[i].Groups); j++ {
+			for k := 0; k < len(body.Controls[i].Groups[j].Checks); k++ {
+				deployment.Results = append(deployment.Results, test_out(body, i, j, k))
+			}
+		}
+	}
 	// Create Policy-Report
 	fmt.Println("Creating policy-report...")
 	result, err := ats.Create(context.TODO(), deployment, metav1.CreateOptions{})
@@ -239,6 +187,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
+
 }
 
 func runKubeBench() string {
@@ -252,4 +201,29 @@ func runKubeBench() string {
 	}
 
 	return string(out)
+}
+
+func test_out(body OverallControls, i int, j int, k int) *appsv1aplha1.PolicyReportResult {
+	Result := appsv1aplha1.PolicyReportResult{
+		Policy:      body.Controls[i].Text,
+		Rule:        body.Controls[i].Groups[j].Text,
+		Category:    body.Controls[i].Groups[j].Text,
+		Result:      strings.ToLower(string(body.Controls[i].Groups[j].Checks[k].State)),
+		Scored:      body.Controls[i].Groups[j].Checks[k].Scored,
+		Description: body.Controls[i].Groups[j].Checks[k].Text,
+		Properties: map[string]string{
+			"index":           body.Controls[i].Groups[j].Checks[k].ID,
+			"audit":           body.Controls[i].Groups[j].Checks[k].Audit,
+			"AuditEnv":        body.Controls[i].Groups[j].Checks[k].AuditEnv,
+			"AuditConfig":     body.Controls[i].Groups[j].Checks[k].AuditConfig,
+			"type":            body.Controls[i].Groups[j].Checks[k].Type,
+			"remediation":     body.Controls[i].Groups[j].Checks[k].Remediation,
+			"test_info":       body.Controls[i].Groups[j].Checks[k].TestInfo[0],
+			"actual_value":    body.Controls[i].Groups[j].Checks[k].ActualValue,
+			"IsMultiple":      strconv.FormatBool(body.Controls[i].Groups[j].Checks[k].IsMultiple),
+			"expected_result": body.Controls[i].Groups[j].Checks[k].ExpectedResult,
+			"reason":          body.Controls[i].Groups[j].Checks[k].Reason,
+		},
+	}
+	return &Result
 }
