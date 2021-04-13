@@ -102,13 +102,12 @@ const (
 // Check contains information about a recommendation in the
 // CIS Kubernetes document.
 type Check struct {
-	ID          string `yaml:"id" json:"test_number"`
-	Text        string `json:"test_desc"`
-	Audit       string `json:"audit"`
-	AuditEnv    string `yaml:"audit_env"`
-	AuditConfig string `yaml:"audit_config"`
-	Type        string `json:"type"`
-	// Tests             *tests   `json:"-"`
+	ID                string   `yaml:"id" json:"test_number"`
+	Text              string   `json:"test_desc"`
+	Audit             string   `json:"audit"`
+	AuditEnv          string   `yaml:"audit_env"`
+	AuditConfig       string   `yaml:"audit_config"`
+	Type              string   `json:"type"`
 	Set               bool     `json:"-"`
 	Remediation       string   `json:"remediation"`
 	TestInfo          []string `json:"test_info"`
@@ -132,64 +131,6 @@ const (
 	AuditEnv     AuditUsed = "auditEnv"
 )
 
-func main() {
-
-	//calls function that runs KubeBench
-	out := runKubeBench()
-	jsonDataReader := strings.NewReader(out)
-	decoder := json.NewDecoder(jsonDataReader)
-
-	var body OverallControls
-	err := decoder.Decode(&body)
-	if err != nil {
-		panic(err)
-	}
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err)
-	}
-	clientset, err := client.NewForConfig(config)
-	if err != nil {
-		panic(err)
-	}
-
-	ats := clientset.Wgpolicyk8sV1alpha1().PolicyReports("default")
-	deployment := &appsv1aplha1.PolicyReport{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "cis-dummy-policy",
-		},
-		Summary: appsv1aplha1.PolicyReportSummary{
-			Pass: body.Totals.Pass,
-			Fail: body.Totals.Fail,
-			Warn: body.Totals.Warn,
-		},
-	}
-
-	for i := 0; i < 5; i++ {
-		for j := 0; j < len(body.Controls[i].Groups); j++ {
-			for k := 0; k < len(body.Controls[i].Groups[j].Checks); k++ {
-				deployment.Results = append(deployment.Results, test_out(body, i, j, k))
-			}
-		}
-	}
-	// Create Policy-Report
-	fmt.Println("Creating policy-report...")
-	result, err := ats.Create(context.TODO(), deployment, metav1.CreateOptions{})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
-
-}
-
 func runKubeBench() string {
 
 	//executes kube-bench
@@ -203,27 +144,104 @@ func runKubeBench() string {
 	return string(out)
 }
 
-func test_out(body OverallControls, i int, j int, k int) *appsv1aplha1.PolicyReportResult {
+func getArguments() (string, string, *string) {
+	var policyName, namespace string
+	flag.StringVar(&policyName, "policyName", "", "name of policy report")
+	flag.StringVar(&namespace, "namespace", "", "namespace of the cluster")
+
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+
+	flag.Parse()
+
+	return policyName, namespace, kubeconfig
+}
+
+func policyReportsResult(body OverallControls, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
 	Result := appsv1aplha1.PolicyReportResult{
-		Policy:      body.Controls[i].Text,
-		Rule:        body.Controls[i].Groups[j].Text,
-		Category:    body.Controls[i].Groups[j].Text,
-		Result:      strings.ToLower(string(body.Controls[i].Groups[j].Checks[k].State)),
-		Scored:      body.Controls[i].Groups[j].Checks[k].Scored,
-		Description: body.Controls[i].Groups[j].Checks[k].Text,
+		Policy:      control.Text,
+		Rule:        group.Text,
+		Category:    check.Text,
+		Result:      strings.ToLower(string(check.State)),
+		Scored:      check.Scored,
+		Description: check.Text,
 		Properties: map[string]string{
-			"index":           body.Controls[i].Groups[j].Checks[k].ID,
-			"audit":           body.Controls[i].Groups[j].Checks[k].Audit,
-			"AuditEnv":        body.Controls[i].Groups[j].Checks[k].AuditEnv,
-			"AuditConfig":     body.Controls[i].Groups[j].Checks[k].AuditConfig,
-			"type":            body.Controls[i].Groups[j].Checks[k].Type,
-			"remediation":     body.Controls[i].Groups[j].Checks[k].Remediation,
-			"test_info":       body.Controls[i].Groups[j].Checks[k].TestInfo[0],
-			"actual_value":    body.Controls[i].Groups[j].Checks[k].ActualValue,
-			"IsMultiple":      strconv.FormatBool(body.Controls[i].Groups[j].Checks[k].IsMultiple),
-			"expected_result": body.Controls[i].Groups[j].Checks[k].ExpectedResult,
-			"reason":          body.Controls[i].Groups[j].Checks[k].Reason,
+			"index":           check.ID,
+			"audit":           check.Audit,
+			"AuditEnv":        check.AuditEnv,
+			"AuditConfig":     check.AuditConfig,
+			"type":            check.Type,
+			"remediation":     check.Remediation,
+			"test_info":       check.TestInfo[0],
+			"actual_value":    check.ActualValue,
+			"IsMultiple":      strconv.FormatBool(check.IsMultiple),
+			"expected_result": check.ExpectedResult,
+			"reason":          check.Reason,
 		},
 	}
 	return &Result
+}
+
+func createPolicyReport(body OverallControls) {
+
+	policyName, namespace, kubeconfig := getArguments()
+
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	if err != nil {
+		panic(err)
+	}
+	clientset, err := client.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
+
+	policyReports := clientset.Wgpolicyk8sV1alpha1().PolicyReports(namespace)
+	policy := &appsv1aplha1.PolicyReport{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: policyName,
+		},
+		Summary: appsv1aplha1.PolicyReportSummary{
+			Pass: body.Totals.Pass,
+			Fail: body.Totals.Fail,
+			Warn: body.Totals.Warn,
+		},
+	}
+
+	for _, control := range body.Controls {
+		for _, group := range control.Groups {
+			for _, check := range group.Checks {
+				_ = check
+				policy.Results = append(policy.Results, policyReportsResult(body, control, group, check))
+			}
+		}
+	}
+	// Create Policy-Report
+	fmt.Println("Creating policy-report...")
+	result, err := policyReports.Create(context.TODO(), policy, metav1.CreateOptions{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
+
+}
+
+func main() {
+
+	//calls function that runs KubeBench
+	out := runKubeBench()
+	jsonDataReader := strings.NewReader(out)
+	decoder := json.NewDecoder(jsonDataReader)
+
+	var body OverallControls
+	err := decoder.Decode(&body)
+	if err != nil {
+		panic(err)
+	}
+
+	createPolicyReport(body)
+
 }
