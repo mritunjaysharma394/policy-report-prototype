@@ -21,6 +21,8 @@ Step 3: ```docker run --rm -v `pwd`:/host aquasec/kube-bench:latest install```
 ```sh
 # 1. create a local Kubernetes cluster
 kind create cluster
+    OR
+minikube start
 
 # 2. create a CustomResourceDefinition
 kubectl create -f crd/wgpolicyk8s.io_policyreports.yaml
