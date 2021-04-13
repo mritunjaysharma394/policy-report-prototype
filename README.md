@@ -14,7 +14,7 @@ Step 1: `git clone https://github.com/mritunjaysharma394/policy-report-prototype
 
 Step 2: `cd policy-report-prototype`
 
-Step 3: `docker run --rm -v pwd:/host aquasec/kube-bench:latest install`
+Step 3: ```docker run --rm -v `pwd`:/host aquasec/kube-bench:latest install```
 
 ### Next Steps
 
