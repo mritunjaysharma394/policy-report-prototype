@@ -11,10 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	appsv1aplha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
 	"k8s.io/client-go/tools/clientcmd"
-	appsv1aplha1 "k8s.io/sample-controller/pkg/apis/wgpolicyk8s.io/v1alpha1"
 
-	client "github.com/policy-report-prototype/pkg/generated/clientset/versioned"
+	client "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"strconv"
