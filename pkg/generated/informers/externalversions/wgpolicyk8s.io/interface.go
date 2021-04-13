@@ -19,8 +19,8 @@ limitations under the License.
 package wgpolicyk8s
 
 import (
-	internalinterfaces "k8s.io/sample-controller/pkg/generated/informers/externalversions/internalinterfaces"
-	v1alpha1 "k8s.io/sample-controller/pkg/generated/informers/externalversions/wgpolicyk8s.io/v1alpha1"
+	internalinterfaces "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/informers/externalversions/wgpolicyk8s.io/v1alpha1"
 )
 
 // Interface provides access to each of this group's versions.

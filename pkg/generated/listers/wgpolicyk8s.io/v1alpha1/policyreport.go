@@ -19,10 +19,10 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
-	v1alpha1 "k8s.io/sample-controller/pkg/apis/wgpolicyk8s.io/v1alpha1"
 )
 
 // PolicyReportLister helps list PolicyReports.

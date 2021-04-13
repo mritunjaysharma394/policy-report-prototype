@@ -21,10 +21,10 @@ package versioned
 import (
 	"fmt"
 
+	wgpolicyk8sv1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned/typed/wgpolicyk8s.io/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
-	wgpolicyk8sv1alpha1 "k8s.io/sample-controller/pkg/generated/clientset/versioned/typed/wgpolicyk8s.io/v1alpha1"
 )
 
 type Interface interface {

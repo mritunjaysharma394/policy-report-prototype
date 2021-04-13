@@ -22,14 +22,14 @@ import (
 	"context"
 	time "time"
 
+	wgpolicyk8siov1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
+	versioned "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned"
+	internalinterfaces "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/informers/externalversions/internalinterfaces"
+	v1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/listers/wgpolicyk8s.io/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
-	wgpolicyk8siov1alpha1 "k8s.io/sample-controller/pkg/apis/wgpolicyk8s.io/v1alpha1"
-	versioned "k8s.io/sample-controller/pkg/generated/clientset/versioned"
-	internalinterfaces "k8s.io/sample-controller/pkg/generated/informers/externalversions/internalinterfaces"
-	v1alpha1 "k8s.io/sample-controller/pkg/generated/listers/wgpolicyk8s.io/v1alpha1"
 )
 
 // PolicyReportInformer provides access to a shared informer and lister for

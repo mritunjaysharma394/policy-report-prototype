@@ -19,9 +19,9 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1alpha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
+	"github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
-	v1alpha1 "k8s.io/sample-controller/pkg/apis/wgpolicyk8s.io/v1alpha1"
-	"k8s.io/sample-controller/pkg/generated/clientset/versioned/scheme"
 )
 
 type Wgpolicyk8sV1alpha1Interface interface {
