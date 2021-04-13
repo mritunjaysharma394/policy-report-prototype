@@ -165,7 +165,7 @@ func policyReportsResult(body OverallControls, control *Controls, group *Group, 
 	Result := appsv1aplha1.PolicyReportResult{
 		Policy:      control.Text,
 		Rule:        group.Text,
-		Category:    check.Text,
+		Category:    group.Text,
 		Result:      strings.ToLower(string(check.State)),
 		Scored:      check.Scored,
 		Description: check.Text,
