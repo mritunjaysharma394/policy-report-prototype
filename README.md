@@ -10,7 +10,7 @@ Building a prototype of Policy Report Generator. It aims to run a CIS benchmark 
 
 This can be accomplished by: 
 
-Step 1: `git clone https://github.com/mritunjaysharma394/policy-report-prototype.git` in your `$GOPATH/src/github.com/`
+Step 1: `git clone https://github.com/mritunjaysharma394/policy-report-prototype.git`
 
 Step 2: `cd policy-report-prototype`
 
