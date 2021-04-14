@@ -161,7 +161,7 @@ func getArguments() (string, string, *string) {
 	return policyName, namespace, kubeconfig
 }
 
-func policyReportsResult(body OverallControls, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
+func policyReportsResult(control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
 	Result := appsv1aplha1.PolicyReportResult{
 		Policy:      control.Text,
 		Rule:        group.Text,
@@ -215,7 +215,7 @@ func createPolicyReport(body OverallControls) {
 		for _, group := range control.Groups {
 			for _, check := range group.Checks {
 				_ = check
-				policy.Results = append(policy.Results, policyReportsResult(body, control, group, check))
+				policy.Results = append(policy.Results, policyReportsResult(control, group, check))
 			}
 		}
 	}
