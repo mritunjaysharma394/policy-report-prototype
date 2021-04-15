@@ -2,35 +2,35 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"reflect"
-	"strings"
+	"context"
 	"testing"
+
+	appsv1aplha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
+	testclient "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned/fake"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestJSON(t *testing.T) {
-	data, err := ioutil.ReadFile("./check.json")
-	if err != nil {
-		fmt.Print(err)
+func TestCreatePolicyReport(t *testing.T) {
+	policyTests := []struct {
+		name         string
+		policyreport *appsv1aplha1.PolicyReport
+		ns           string
+	}{{"demo-test", &appsv1aplha1.PolicyReport{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "demo",
+		},
+		Summary: appsv1aplha1.PolicyReportSummary{
+			Pass: 10,
+			Fail: 4,
+			Warn: 0,
+		},
+	}, "default"},
 	}
 
-	var got, want interface{}
-	// json from stream
-	jsonDataReader1 := strings.NewReader(runKubeBench())
-	//json from file
-	jsonDataReader2 := strings.NewReader(string(data))
-
-	d := json.NewDecoder(jsonDataReader1)
-	if err := d.Decode(&got); err != nil {
-		fmt.Print(err)
-	}
-	d = json.NewDecoder(jsonDataReader2)
-	if err := d.Decode(&want); err != nil {
-		fmt.Print(err)
-	}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("got %q, wanted %q", got, want)
+	for _, pr := range policyTests {
+		_, err := testclient.NewSimpleClientset().Wgpolicyk8sV1alpha1().PolicyReports(pr.ns).Create(context.TODO(), pr.policyreport, metav1.CreateOptions{})
+		if err != nil {
+			t.Fatalf("error injecting pod add: %v", err)
+		}
 	}
 }
