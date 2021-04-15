@@ -2,12 +2,13 @@
 package main
 
 import (
-	"context"
+	"flag"
+	"path/filepath"
 	"testing"
 
 	appsv1aplha1 "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
-	testclient "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/util/homedir"
 )
 
 func TestCreatePolicyReport(t *testing.T) {
@@ -18,7 +19,7 @@ func TestCreatePolicyReport(t *testing.T) {
 	}{
 		{"demo-test-1", &appsv1aplha1.PolicyReport{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "demo",
+				Name: "demo-1",
 			},
 			Summary: appsv1aplha1.PolicyReportSummary{
 				Pass: 10,
@@ -28,7 +29,7 @@ func TestCreatePolicyReport(t *testing.T) {
 		}, "default"},
 		{"demo-test-2", &appsv1aplha1.PolicyReport{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: "demo",
+				Name: "demo-2",
 			},
 			Summary: appsv1aplha1.PolicyReportSummary{
 				Pass: 5,
@@ -61,8 +62,17 @@ func TestCreatePolicyReport(t *testing.T) {
 		}, "default"},
 	}
 
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()
+
 	for _, pr := range policyTests {
-		_, err := testclient.NewSimpleClientset().Wgpolicyk8sV1alpha1().PolicyReports(pr.ns).Create(context.TODO(), pr.policyreport, metav1.CreateOptions{})
+		//_, err := testclient.NewSimpleClientset().Wgpolicyk8sV1alpha1().PolicyReports(pr.ns).Create(context.TODO(), pr.policyreport, metav1.CreateOptions{})
+		err := createPolicyReport(pr.ns, pr.policyreport, kubeconfig)
 		if err != nil {
 			t.Fatalf("error creating policy report: %v", err)
 		}
