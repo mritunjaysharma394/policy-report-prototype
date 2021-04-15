@@ -71,7 +71,6 @@ func TestCreatePolicyReport(t *testing.T) {
 	flag.Parse()
 
 	for _, pr := range policyTests {
-		//_, err := testclient.NewSimpleClientset().Wgpolicyk8sV1alpha1().PolicyReports(pr.ns).Create(context.TODO(), pr.policyreport, metav1.CreateOptions{})
 		err := createPolicyReport(pr.ns, pr.policyreport, kubeconfig)
 		if err != nil {
 			t.Fatalf("error creating policy report: %v", err)
