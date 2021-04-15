@@ -144,10 +144,11 @@ func runKubeBench() string {
 	return string(out)
 }
 
-func getArguments() (string, string, *string) {
-	var policyName, namespace string
+func getArguments() (string, string, string, *string) {
+	var policyName, namespace, category string
 	flag.StringVar(&policyName, "policyName", "", "name of policy report")
 	flag.StringVar(&namespace, "namespace", "", "namespace of the cluster")
+	flag.StringVar(&category, "category", "CIS Benchmarks for Kubernetes", "category of the policy report")
 
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
@@ -158,14 +159,14 @@ func getArguments() (string, string, *string) {
 
 	flag.Parse()
 
-	return policyName, namespace, kubeconfig
+	return policyName, namespace, category, kubeconfig
 }
 
-func policyReportsResult(control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
+func policyReportsResult(category string, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
 	Result := appsv1aplha1.PolicyReportResult{
 		Policy:      control.Text,
 		Rule:        group.Text,
-		Category:    group.Text,
+		Category:    category,
 		Result:      strings.ToLower(string(check.State)),
 		Scored:      check.Scored,
 		Description: check.Text,
@@ -188,7 +189,7 @@ func policyReportsResult(control *Controls, group *Group, check *Check) *appsv1a
 
 func createPolicyReport(body OverallControls) {
 
-	policyName, namespace, kubeconfig := getArguments()
+	policyName, namespace, category, kubeconfig := getArguments()
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
@@ -215,7 +216,7 @@ func createPolicyReport(body OverallControls) {
 		for _, group := range control.Groups {
 			for _, check := range group.Checks {
 				_ = check
-				policy.Results = append(policy.Results, policyReportsResult(control, group, check))
+				policy.Results = append(policy.Results, policyReportsResult(category, control, group, check))
 			}
 		}
 	}
