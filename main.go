@@ -27,6 +27,8 @@ type OverallControls struct {
 	Totals   Summary
 }
 
+var body OverallControls
+
 // Controls holds all controls to check for master nodes.
 type Controls struct {
 	ID      string   `yaml:"id" json:"id"`
@@ -187,9 +189,7 @@ func policyReportsResult(category string, control *Controls, group *Group, check
 	return &Result
 }
 
-func createPolicyReport(body OverallControls) {
-
-	policyName, namespace, category, kubeconfig := getArguments()
+func createPolicyReport(namespace string, policy *appsv1aplha1.PolicyReport, kubeconfig *string) error {
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
@@ -201,6 +201,30 @@ func createPolicyReport(body OverallControls) {
 	}
 
 	policyReports := clientset.Wgpolicyk8sV1alpha1().PolicyReports(namespace)
+	// Create Policy-Report
+	fmt.Println("Creating policy-report...")
+	result, err := policyReports.Create(context.TODO(), policy, metav1.CreateOptions{})
+	if err != nil {
+		return (err)
+	}
+	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
+	return nil
+}
+
+func main() {
+
+	//calls function that runs KubeBench
+	out := runKubeBench()
+	jsonDataReader := strings.NewReader(out)
+	decoder := json.NewDecoder(jsonDataReader)
+
+	err := decoder.Decode(&body)
+	if err != nil {
+		panic(err)
+	}
+
+	policyName, namespace, category, kubeconfig := getArguments()
+
 	policy := &appsv1aplha1.PolicyReport{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: policyName,
@@ -220,29 +244,7 @@ func createPolicyReport(body OverallControls) {
 			}
 		}
 	}
-	// Create Policy-Report
-	fmt.Println("Creating policy-report...")
-	result, err := policyReports.Create(context.TODO(), policy, metav1.CreateOptions{})
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Created policy-report %q.\n", result.GetObjectMeta().GetName())
 
-}
-
-func main() {
-
-	//calls function that runs KubeBench
-	out := runKubeBench()
-	jsonDataReader := strings.NewReader(out)
-	decoder := json.NewDecoder(jsonDataReader)
-
-	var body OverallControls
-	err := decoder.Decode(&body)
-	if err != nil {
-		panic(err)
-	}
-
-	createPolicyReport(body)
+	createPolicyReport(namespace, policy, kubeconfig)
 
 }
