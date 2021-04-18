@@ -2,7 +2,6 @@
 package main
 
 import (
-	"flag"
 	"path/filepath"
 	"testing"
 
@@ -16,6 +15,7 @@ func TestCreatePolicyReport(t *testing.T) {
 		name         string
 		policyreport *appsv1aplha1.PolicyReport
 		ns           string
+		category     string
 	}{
 		{"demo-test-1", &appsv1aplha1.PolicyReport{
 			ObjectMeta: metav1.ObjectMeta{
@@ -26,7 +26,7 @@ func TestCreatePolicyReport(t *testing.T) {
 				Fail: 4,
 				Warn: 0,
 			},
-		}, "default"},
+		}, "default", ""},
 		{"demo-test-2", &appsv1aplha1.PolicyReport{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "demo-2",
@@ -40,7 +40,7 @@ func TestCreatePolicyReport(t *testing.T) {
 				{
 					Policy:      "test-policy",
 					Rule:        "test-rule",
-					Category:    "test-category",
+					Category:    "CIS",
 					Result:      "pass",
 					Scored:      true,
 					Description: "test-description",
@@ -59,21 +59,41 @@ func TestCreatePolicyReport(t *testing.T) {
 					},
 				},
 			},
-		}, "default"},
+		}, "default", "CIS"},
 	}
-
 	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	if kubeconfig == nil {
+		var path string
+		if home := homedir.HomeDir(); home != "" {
+			path = filepath.Join(home, ".kube", "config")
+		} else {
+			path = ""
+		}
+		kubeconfig = &path
 	}
-	flag.Parse()
 
 	for _, pr := range policyTests {
-		err := createPolicyReport(pr.ns, pr.policyreport, kubeconfig)
+		err := createPolicyReport(pr.policyreport.Name, pr.ns, pr.category, kubeconfig, pr.policyreport)
 		if err != nil {
 			t.Fatalf("error creating policy report: %v", err)
 		}
 	}
+}
+
+func TestRunKubeBench(t *testing.T) {
+	_, err := runKubeBench()
+	if err != nil {
+		t.Fatalf("error getting kube-bench json output due to: %v", err)
+	}
+}
+
+func TestGetBody(t *testing.T) {
+	_, err := getBody()
+	if err != nil {
+		t.Fatalf("error getting body of kube-bench json output due to: %v", err)
+	}
+}
+
+func TestGetArguments(t *testing.T) {
+	t.Log(getArguments())
 }
