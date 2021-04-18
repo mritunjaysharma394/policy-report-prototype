@@ -133,23 +133,33 @@ const (
 	AuditEnv     AuditUsed = "auditEnv"
 )
 
-func runKubeBench() string {
+func runKubeBench() (string, error) {
 
 	//executes kube-bench
 	cmd := exec.Command("./kube-bench", "--json")
 	out, err := cmd.CombinedOutput()
+	return string(out), err
+}
+
+func getBody() (*OverallControls, error) {
+	//calls function that runs KubeBench
+	out, err := runKubeBench()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return string(out)
+	jsonDataReader := strings.NewReader(out)
+	decoder := json.NewDecoder(jsonDataReader)
+
+	err = decoder.Decode(&body)
+	return &body, err
 }
 
 func getArguments() (string, string, string, *string) {
 	var policyName, namespace, category string
 	flag.StringVar(&policyName, "policyName", "", "name of policy report")
-	flag.StringVar(&namespace, "namespace", "", "namespace of the cluster")
+	flag.StringVar(&namespace, "namespace", "default", "namespace of the cluster")
 	flag.StringVar(&category, "category", "CIS Benchmarks for Kubernetes", "category of the policy report")
 
 	var kubeconfig *string
@@ -160,11 +170,10 @@ func getArguments() (string, string, string, *string) {
 	}
 
 	flag.Parse()
-
 	return policyName, namespace, category, kubeconfig
 }
 
-func policyReportsResult(category string, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
+func getPolicyReportsResult(category string, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
 	Result := appsv1aplha1.PolicyReportResult{
 		Policy:      control.Text,
 		Rule:        group.Text,
@@ -189,7 +198,7 @@ func policyReportsResult(category string, control *Controls, group *Group, check
 	return &Result
 }
 
-func createPolicyReport(namespace string, policy *appsv1aplha1.PolicyReport, kubeconfig *string) error {
+func createPolicyReport(policyName string, namespace string, category string, kubeconfig *string, policy *appsv1aplha1.PolicyReport) error {
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
@@ -198,6 +207,31 @@ func createPolicyReport(namespace string, policy *appsv1aplha1.PolicyReport, kub
 	clientset, err := client.NewForConfig(config)
 	if err != nil {
 		panic(err)
+	}
+
+	body, err := getBody()
+	if err != nil {
+		panic(err)
+	}
+
+	policy = &appsv1aplha1.PolicyReport{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: policyName,
+		},
+		Summary: appsv1aplha1.PolicyReportSummary{
+			Pass: body.Totals.Pass,
+			Fail: body.Totals.Fail,
+			Warn: body.Totals.Warn,
+		},
+	}
+
+	for _, control := range body.Controls {
+		for _, group := range control.Groups {
+			for _, check := range group.Checks {
+				_ = check
+				policy.Results = append(policy.Results, getPolicyReportsResult(category, control, group, check))
+			}
+		}
 	}
 
 	policyReports := clientset.Wgpolicyk8sV1alpha1().PolicyReports(namespace)
@@ -213,38 +247,10 @@ func createPolicyReport(namespace string, policy *appsv1aplha1.PolicyReport, kub
 
 func main() {
 
-	//calls function that runs KubeBench
-	out := runKubeBench()
-	jsonDataReader := strings.NewReader(out)
-	decoder := json.NewDecoder(jsonDataReader)
-
-	err := decoder.Decode(&body)
-	if err != nil {
-		panic(err)
-	}
-
 	policyName, namespace, category, kubeconfig := getArguments()
-
-	policy := &appsv1aplha1.PolicyReport{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: policyName,
-		},
-		Summary: appsv1aplha1.PolicyReportSummary{
-			Pass: body.Totals.Pass,
-			Fail: body.Totals.Fail,
-			Warn: body.Totals.Warn,
-		},
+	var policy *appsv1aplha1.PolicyReport
+	err := createPolicyReport(policyName, namespace, category, kubeconfig, policy)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	for _, control := range body.Controls {
-		for _, group := range control.Groups {
-			for _, check := range group.Checks {
-				_ = check
-				policy.Results = append(policy.Results, policyReportsResult(category, control, group, check))
-			}
-		}
-	}
-
-	createPolicyReport(namespace, policy, kubeconfig)
-
 }
