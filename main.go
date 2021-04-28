@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os/exec"
 	"path/filepath"
@@ -133,17 +134,30 @@ const (
 	AuditEnv     AuditUsed = "auditEnv"
 )
 
-func runKubeBench() (string, error) {
+// func runDockerImage() error {
+// 	if err := exec.Command("docker", "run", "-rm", ".v", "`pwd`", "host", "aquasec/kube-bench:latest install").Run(); err != nil {
+// 		log.Fatal(err)
+// 		return err
+// 	}
+// 	return nil
+// }
 
+func runKubeBench(jsonPath string) (string, error) {
+
+	// err := runDockerImage()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 	//executes kube-bench
-	cmd := exec.Command("./kube-bench", "--json")
-	out, err := cmd.CombinedOutput()
+	// cmd := exec.Command("./kube-bench", "--benchmark", "gke-1.0", "--json")
+	// out, err := cmd.CombinedOutput()
+	out, err := ioutil.ReadFile(jsonPath)
 	return string(out), err
 }
 
-func getBody() (*OverallControls, error) {
+func getBody(jsonPath string) (*OverallControls, error) {
 	//calls function that runs KubeBench
-	out, err := runKubeBench()
+	out, err := runKubeBench(jsonPath)
 
 	if err != nil {
 		log.Fatal(err)
@@ -156,8 +170,9 @@ func getBody() (*OverallControls, error) {
 	return &body, err
 }
 
-func getArguments() (string, string, string, *string) {
-	var policyName, namespace, category string
+func getArguments() (string, string, string, string, *string) {
+	var jsonPath, policyName, namespace, category string
+	flag.StringVar(&jsonPath, "jsonPath", "check.json", "Path to the JSON file")
 	flag.StringVar(&policyName, "policyName", "", "name of policy report")
 	flag.StringVar(&namespace, "namespace", "default", "namespace of the cluster")
 	flag.StringVar(&category, "category", "CIS Benchmarks for Kubernetes", "category of the policy report")
@@ -170,7 +185,7 @@ func getArguments() (string, string, string, *string) {
 	}
 
 	flag.Parse()
-	return policyName, namespace, category, kubeconfig
+	return jsonPath, policyName, namespace, category, kubeconfig
 }
 
 func getPolicyReportsResult(category string, control *Controls, group *Group, check *Check) *appsv1aplha1.PolicyReportResult {
@@ -198,7 +213,7 @@ func getPolicyReportsResult(category string, control *Controls, group *Group, ch
 	return &Result
 }
 
-func createPolicyReport(policyName string, namespace string, category string, kubeconfig *string, policy *appsv1aplha1.PolicyReport) error {
+func createPolicyReport(jsonPath string, policyName string, namespace string, category string, kubeconfig *string, policy *appsv1aplha1.PolicyReport) error {
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
@@ -209,7 +224,7 @@ func createPolicyReport(policyName string, namespace string, category string, ku
 		panic(err)
 	}
 
-	body, err := getBody()
+	body, err := getBody(jsonPath)
 	if err != nil {
 		panic(err)
 	}
@@ -247,9 +262,11 @@ func createPolicyReport(policyName string, namespace string, category string, ku
 
 func main() {
 
-	policyName, namespace, category, kubeconfig := getArguments()
+	jsonPath, policyName, namespace, category, kubeconfig := getArguments()
 	var policy *appsv1aplha1.PolicyReport
-	err := createPolicyReport(policyName, namespace, category, kubeconfig, policy)
+	cmdStr := "docker run --rm -v `pwd`:/host aquasec/kube-bench:latest install"
+	exec.Command("/bin/sh", "-c", cmdStr).Run()
+	err := createPolicyReport(jsonPath, policyName, namespace, category, kubeconfig, policy)
 	if err != nil {
 		log.Fatal(err)
 	}
