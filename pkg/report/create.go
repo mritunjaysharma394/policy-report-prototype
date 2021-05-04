@@ -1,14 +1,13 @@
 package report
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	kubebench "github.com/aquasecurity/kube-bench/check"
-	policyreport "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
+	policyreport "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha2"
 )
 
 func New(cisResults *kubebench.OverallControls, name string, category string) (*policyreport.PolicyReport, error) {
@@ -61,9 +60,9 @@ func newResult(category string, control *kubebench.Controls, group *kubebench.Gr
 	}
 }
 
-func convertState(s kubebench.State) string {
+func convertState(s kubebench.State) policyreport.PolicyResult {
 
 	str := strings.ToLower(string(s))
 
-	return fmt.Sprintf("%v", str)
+	return policyreport.PolicyResult(str)
 }

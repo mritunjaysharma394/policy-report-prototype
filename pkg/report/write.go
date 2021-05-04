@@ -7,9 +7,9 @@ import (
 	// TODO: upgrade to v1alpha2 CRD and create a Makefile / shell script for code generation
 	// see example at: https://leftasexercise.com/2019/07/29/building-a-bitcoin-controller-for-kubernetes-part-ii/
 	// https://github.com/christianb93/bitcoin-controller/blob/master/build/controller/generate_code.sh
-	policyreport "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha1"
+	policyreport "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha2"
 
-	client "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/clientset/versioned"
+	client "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/v1alpha2/clientset/versioned"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/retry"
@@ -26,7 +26,7 @@ func Write(r *policyreport.PolicyReport, namespace string, kubeconfig string) (*
 		return nil, err
 	}
 
-	policyReport := clientset.Wgpolicyk8sV1alpha1().PolicyReports(namespace)
+	policyReport := clientset.Wgpolicyk8sV1alpha2().PolicyReports(namespace)
 
 	result, err := policyReport.Create(context.TODO(), r, metav1.CreateOptions{})
 	if err != nil {

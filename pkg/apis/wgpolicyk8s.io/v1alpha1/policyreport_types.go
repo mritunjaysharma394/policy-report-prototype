@@ -84,7 +84,7 @@ type PolicyReportResult struct {
 	Timestamp metav1.Timestamp `json:"timestamp,omitempty"`
 
 	// Result indicates the outcome of the policy rule execution
-	Result string `json:"result,omitempty"`
+	Result PolicyResult `json:"result,omitempty"`
 
 	// Scored indicates if this result is scored
 	Scored bool `json:"scored,omitempty"`
