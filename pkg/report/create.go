@@ -3,6 +3,7 @@ package report
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -62,7 +63,7 @@ func newResult(category string, control *kubebench.Controls, group *kubebench.Gr
 
 func convertState(s kubebench.State) string {
 
-	// TODO: write a case statement for conversion
+	str := strings.ToLower(string(s))
 
-	return fmt.Sprintf("%v", s)
+	return fmt.Sprintf("%v", str)
 }
