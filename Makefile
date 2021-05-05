@@ -11,3 +11,6 @@ vet:
 
 docker: build
 	docker build . -t wg-policy/policyreport
+
+codegen:
+	./hack/update-codegen.sh
