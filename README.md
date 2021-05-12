@@ -22,7 +22,7 @@ kind create cluster
 minikube start
 
 # 4. create a CustomResourceDefinition
-kubectl create -f crd/wgpolicyk8s.io_policyreports.yaml
+kubectl create -f crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
 
 # 5. Build
 make build
