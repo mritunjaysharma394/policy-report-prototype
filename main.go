@@ -16,10 +16,12 @@ import (
 )
 
 var (
-	name       string
-	namespace  string
-	category   string
-	kubeconfig string
+	name         string
+	namespace    string
+	category     string
+	kubeconfig   string
+	kubebenchImg *string
+	timeout      *time.Duration
 )
 
 func parseArguments() {
@@ -33,38 +35,22 @@ func parseArguments() {
 		flag.StringVar(&kubeconfig, "kubeconfig", "", "absolute path to the kubeconfig file")
 	}
 
+	kubebenchImg = flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
+	timeout = flag.Duration("timeout", 10*time.Minute, "Test Timeout")
+
 	flag.Parse()
 }
 
 func main() {
 	parseArguments()
 
-	var kubebenchImg = flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
-	var timeout = flag.Duration("timeout", 10*time.Minute, "Test Timeout")
-
-	var testdataDir string
-	ctx, err := kubebench.SetupCluster("kube-bench", fmt.Sprintf("./testdata/%s/add-tls-kind.yaml", testdataDir), *timeout)
+	resultData, err := kubebench.RunJob(kubeconfig, "test", "job.yaml", *kubebenchImg, *timeout)
 	if err != nil {
-		fmt.Errorf("failed to setup KIND cluster error: %v", err)
-	}
-	defer func() {
-		*ctx.Delete()
-	}()
-
-	if err := kubebench.LoadImageFromDocker(*kubebenchImg, *ctx); err != nil {
-		fmt.Errorf("failed to load kube-bench image from Docker to KIND error: %v", err)
+		fmt.Printf("failed to run job of kube-bench: %v \n", err)
+		os.Exit(-1)
 	}
 
-	clientset, err := kubebench.GetClientSet(ctx.KubeConfigPath())
-	if err != nil {
-		fmt.Errorf("failed to connect to Kubernetes cluster error: %v", err)
-	}
-
-	resultData, err := kubebench.RunWithKind(ctx, clientset, c.TestName, c.KubebenchYAML, *kubebenchImg, *timeout)
-	if err != nil {
-		fmt.Errorf("unexpected error: %v", err)
-	}
-
+	fmt.Println(resultData)
 	// run kubebench
 	cis, err := kubebench.Run([]string{"--json"})
 	if err != nil {

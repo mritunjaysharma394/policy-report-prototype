@@ -16,53 +16,42 @@ import (
 	yaml "k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	"sigs.k8s.io/kind/pkg/cluster"
-	//"sigs.k8s.io/kind/pkg/cluster/create"
 )
 
-func RunWithKind(ctx context.Context, clientset *kubernetes.Clientset, jobName, kubebenchYAML, kubebenchImg string, timeout time.Duration) (string, error) {
-	err := deployJob(ctx, clientset, kubebenchYAML, kubebenchImg)
+func getClientSet(kubeconfig string) (*kubernetes.Clientset, error) {
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	if err != nil {
+		panic(err)
+	}
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
+
+	return clientset, nil
+
+}
+func RunJob(kubeconfig string, jobName, kubebenchYAML, kubebenchImg string, timeout time.Duration) (string, error) {
+
+	clientset, err := getClientSet(kubeconfig)
+	err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
 	if err != nil {
 		return "", err
 	}
 
-	p, err := findPodForJob(ctx, clientset, jobName, timeout)
+	p, err := findPodForJob(context.TODO(), clientset, jobName, timeout)
 	if err != nil {
 		return "", err
 	}
 
-	output := getPodLogs(ctx, clientset, p)
+	output := getPodLogs(context.TODO(), clientset, p)
 
-	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(ctx, jobName, metav1.DeleteOptions{})
+	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
 	if err != nil {
 		return "", err
 	}
 
 	return output, nil
-}
-
-func SetupCluster(clusterName, kindCfg string, duration time.Duration) (*context.Context, error) {
-	options := create.WithConfigFile(kindCfg)
-	toptions := create.WaitForReady(duration)
-	ctx := cluster.NewContext(clusterName)
-	if err := ctx.Create(options, toptions); err != nil {
-		return nil, err
-	}
-
-	return ctx, nil
-}
-
-func GetClientSet(configPath string) (*kubernetes.Clientset, error) {
-	config, err := clientcmd.BuildConfigFromFlags("", configPath)
-	if err != nil {
-		return nil, err
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		return nil, err
-	}
-
-	return clientset, nil
 }
 
 func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) error {
