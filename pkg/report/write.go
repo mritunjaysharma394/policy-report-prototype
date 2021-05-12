@@ -3,10 +3,12 @@ package report
 import (
 	"context"
 	"fmt"
+	"log"
 
 	policyreport "github.com/mritunjaysharma394/policy-report-prototype/pkg/apis/wgpolicyk8s.io/v1alpha2"
 
 	client "github.com/mritunjaysharma394/policy-report-prototype/pkg/generated/v1alpha2/clientset/versioned"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/retry"
@@ -28,7 +30,7 @@ func Write(r *policyreport.PolicyReport, namespace string, kubeconfig string) (*
 	// Check for existing Policy Reports
 	result, getErr := policyReport.Get(context.TODO(), r.Name, metav1.GetOptions{})
 	// Create new Policy Report if not found
-	if getErr != nil {
+	if errors.IsNotFound(getErr) {
 		fmt.Println("creating policy report...")
 
 		result, err = policyReport.Create(context.TODO(), r, metav1.CreateOptions{})
@@ -40,7 +42,21 @@ func Write(r *policyreport.PolicyReport, namespace string, kubeconfig string) (*
 		// Update existing Policy Report
 		fmt.Println("updating policy report...")
 		retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-			_, updateErr := policyReport.Update(context.TODO(), result, metav1.UpdateOptions{})
+
+			getObj, err := policyReport.Get(context.TODO(), r.GetName(), metav1.GetOptions{})
+			if errors.IsNotFound(err) {
+				// This doesnt ever happen even if it is already deleted or not found
+				log.Printf("%v not found", r.GetName())
+				return nil
+			}
+
+			if err != nil {
+				return err
+			}
+
+			r.SetResourceVersion(getObj.GetResourceVersion())
+
+			_, updateErr := policyReport.Update(context.TODO(), r, metav1.UpdateOptions{})
 			return updateErr
 		})
 		if retryErr != nil {
