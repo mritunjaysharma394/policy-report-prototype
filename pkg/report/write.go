@@ -28,13 +28,16 @@ func Write(r *policyreport.PolicyReport, namespace string, kubeconfig string) (*
 
 	policyReport := clientset.Wgpolicyk8sV1alpha2().PolicyReports(namespace)
 
+	fmt.Println("Creating Policy Report...")
+
 	result, err := policyReport.Create(context.TODO(), r, metav1.CreateOptions{})
 	if err != nil {
 		return nil, err
 	}
+	// TODO : Get first
 
 	// Update Policy Report
-	fmt.Println("Updating deployment...")
+	fmt.Println("Updating Policy Report...")
 	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		// Retrieve the latest version of Policy Report before attempting update
 		// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
@@ -42,7 +45,7 @@ func Write(r *policyreport.PolicyReport, namespace string, kubeconfig string) (*
 		if getErr != nil {
 			panic(fmt.Errorf("failed to get latest version of Policy Report: %v", getErr))
 		}
-
+		// if (result.Name!=
 		_, updateErr := policyReport.Update(context.TODO(), result, metav1.UpdateOptions{})
 		return updateErr
 	})

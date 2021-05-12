@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/mritunjaysharma394/policy-report-prototype/pkg/report"
 
@@ -37,6 +38,32 @@ func parseArguments() {
 
 func main() {
 	parseArguments()
+
+	var kubebenchImg = flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
+	var timeout = flag.Duration("timeout", 10*time.Minute, "Test Timeout")
+
+	var testdataDir string
+	ctx, err := kubebench.SetupCluster("kube-bench", fmt.Sprintf("./testdata/%s/add-tls-kind.yaml", testdataDir), *timeout)
+	if err != nil {
+		fmt.Errorf("failed to setup KIND cluster error: %v", err)
+	}
+	defer func() {
+		*ctx.Delete()
+	}()
+
+	if err := kubebench.LoadImageFromDocker(*kubebenchImg, *ctx); err != nil {
+		fmt.Errorf("failed to load kube-bench image from Docker to KIND error: %v", err)
+	}
+
+	clientset, err := kubebench.GetClientSet(ctx.KubeConfigPath())
+	if err != nil {
+		fmt.Errorf("failed to connect to Kubernetes cluster error: %v", err)
+	}
+
+	resultData, err := kubebench.RunWithKind(ctx, clientset, c.TestName, c.KubebenchYAML, *kubebenchImg, *timeout)
+	if err != nil {
+		fmt.Errorf("unexpected error: %v", err)
+	}
 
 	// run kubebench
 	cis, err := kubebench.Run([]string{"--json"})
