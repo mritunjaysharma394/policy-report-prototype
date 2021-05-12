@@ -44,17 +44,10 @@ func parseArguments() {
 func main() {
 	parseArguments()
 
-	resultData, err := kubebench.RunJob(kubeconfig, "kube-bench", "job.yaml", *kubebenchImg, *timeout)
+	//run kube-bench job
+	cis, err := kubebench.RunJob(kubeconfig, "kube-bench", "job.yaml", *kubebenchImg, *timeout)
 	if err != nil {
 		fmt.Printf("failed to run job of kube-bench: %v \n", err)
-		os.Exit(-1)
-	}
-
-	fmt.Println(resultData)
-	// run kubebench
-	cis, err := kubebench.Run([]string{"--json"})
-	if err != nil {
-		fmt.Printf("failed to run kube-bench: %v \n", err)
 		os.Exit(-1)
 	}
 

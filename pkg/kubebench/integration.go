@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	kubebench "github.com/aquasecurity/kube-bench/check"
 	batchv1 "k8s.io/api/batch/v1"
 	apiv1 "k8s.io/api/core/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -31,27 +32,33 @@ func getClientSet(kubeconfig string) (*kubernetes.Clientset, error) {
 	return clientset, nil
 
 }
-func RunJob(kubeconfig string, jobName, kubebenchYAML, kubebenchImg string, timeout time.Duration) (string, error) {
+func RunJob(kubeconfig string, jobName, kubebenchYAML, kubebenchImg string, timeout time.Duration) (*kubebench.OverallControls, error) {
 
 	clientset, err := getClientSet(kubeconfig)
 	err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	p, err := findPodForJob(context.TODO(), clientset, jobName, timeout)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	output := getPodLogs(context.TODO(), clientset, p)
 
 	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return output, nil
+	controls, err := convert(output)
+	if err != nil {
+		return nil, err
+	}
+
+	return controls, nil
+
 }
 
 func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) error {
@@ -66,6 +73,7 @@ func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYA
 		return err
 	}
 	job.Spec.Template.Spec.Containers[0].Image = kubebenchImg
+	job.Spec.Template.Spec.Containers[0].Args = []string{"--json"}
 
 	_, err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Create(ctx, job, metav1.CreateOptions{})
 
