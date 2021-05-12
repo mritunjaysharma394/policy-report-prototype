@@ -16,27 +16,31 @@ import (
 )
 
 var (
-	name         string
-	namespace    string
-	category     string
-	kubeconfig   string
-	kubebenchImg *string
-	timeout      *time.Duration
+	name          string
+	namespace     string
+	category      string
+	kubeconfig    string
+	jobName       string
+	kubebenchYAML string
+	kubebenchImg  *string
+	timeout       *time.Duration
 )
 
 func parseArguments() {
 	flag.StringVar(&name, "name", "kube-bench", "name of policy report")
 	flag.StringVar(&namespace, "namespace", "default", "namespace of the cluster")
 	flag.StringVar(&category, "category", "CIS Benchmarks", "category of the policy report")
+	flag.StringVar(&jobName, "jobName", "kube-bench", "job name for kube-bench job")
+	flag.StringVar(&kubebenchYAML, "yaml", "jobs/job.yaml", "YAML for kube-bench job")
+
+	kubebenchImg = flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
+	timeout = flag.Duration("timeout", 10*time.Minute, "Test Timeout")
 
 	if home := homedir.HomeDir(); home != "" {
 		flag.StringVar(&kubeconfig, "kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	} else {
 		flag.StringVar(&kubeconfig, "kubeconfig", "", "absolute path to the kubeconfig file")
 	}
-
-	kubebenchImg = flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
-	timeout = flag.Duration("timeout", 10*time.Minute, "Test Timeout")
 
 	flag.Parse()
 }
@@ -45,7 +49,7 @@ func main() {
 	parseArguments()
 
 	//run kube-bench job
-	cis, err := kubebench.RunJob(kubeconfig, "kube-bench", "job.yaml", *kubebenchImg, *timeout)
+	cis, err := kubebench.RunJob(kubeconfig, jobName, kubebenchYAML, *kubebenchImg, *timeout)
 	if err != nil {
 		fmt.Printf("failed to run job of kube-bench: %v \n", err)
 		os.Exit(-1)
