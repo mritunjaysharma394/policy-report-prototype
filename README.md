@@ -35,4 +35,4 @@ kubectl get policyreports
 ```
 **Notes**: 
 * Flags `-name`,`-namespace`, `-yaml`, `-jobName`, `-category` are user configurable and can be changed by changing the variable on the right hand side. 
-* In order to generate policy report in the form of YAML, step 5 can be written as `kubectl get policyreports -o yaml > res.yaml` which will generate it as `res.yaml` in this case.
+* In order to generate policy report in the form of YAML, step 7 can be written as `kubectl get policyreports -o yaml > res.yaml` which will generate it as `res.yaml` in this case.
