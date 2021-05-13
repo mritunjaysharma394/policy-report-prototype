@@ -28,7 +28,7 @@ kubectl create -f crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
 make build
 
 # 6. Create policy report using
-./policyreport -name="sample-policy-report" -yaml="job.yaml" -jobName="kube-bench-master" -namespace="default" -category="CIS Benchmarks"
+./policyreport -name="sample-policy-report" -yaml="job.yaml" -namespace="default" -category="CIS Benchmarks"
 
 # 7. check policyreports created through the custom resource
 kubectl get policyreports
