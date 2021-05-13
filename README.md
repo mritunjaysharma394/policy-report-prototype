@@ -28,11 +28,13 @@ kubectl create -f crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
 make build
 
 # 6. Create policy report using
-./policyreport -name="sample-policy-report" -yaml="jobs/job-master.yaml" -jobName="kube-bench-master" -namespace="default" -category="CIS Benchmarks"
+./policyreport -name="sample-policy-report" -yaml="job.yaml" -jobName="kube-bench-master" -namespace="default" -category="CIS Benchmarks"
 
 # 7. check policyreports created through the custom resource
 kubectl get policyreports
 ```
-**Notes**: 
-* Flags `-name`,`-namespace`, `-yaml`, `-jobName`, `-category` are user configurable and can be changed by changing the variable on the right hand side. 
+**Notes**:
+* Flags `-name`,`-namespace`, `-yaml`, `-category` are user configurable and can be changed by changing the variable on the right hand side.
+* Flag `-yaml` input is a string that tells the type of `kube-bench` YAML and the strings are matched internally to the path of the job YAMLs located in `pkg/kubebench/jobs`. The user just need to enter the type of yaml. Example:
+`-yaml=job.yaml`, `-yaml=job-master.yaml`, `-yaml=job-node.yaml`,etc.
 * In order to generate policy report in the form of YAML, step 7 can be written as `kubectl get policyreports -o yaml > res.yaml` which will generate it as `res.yaml` in this case.

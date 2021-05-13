@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strings"
 	"time"
 
@@ -33,10 +32,11 @@ func getClientSet(kubeconfig string) (*kubernetes.Clientset, error) {
 	return clientset, nil
 
 }
-func RunJob(kubeconfig string, jobName, kubebenchYAML, kubebenchImg string, timeout time.Duration) (*kubebench.OverallControls, error) {
+func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.Duration) (*kubebench.OverallControls, error) {
 
 	clientset, err := getClientSet(kubeconfig)
-	err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
+	var jobName string
+	jobName, err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
 	if err != nil {
 		return nil, err
 	}
@@ -62,23 +62,25 @@ func RunJob(kubeconfig string, jobName, kubebenchYAML, kubebenchImg string, time
 
 }
 
-func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) error {
-	jobYAML, err := ioutil.ReadFile(kubebenchYAML)
+func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) (string, error) {
+	//jobYAML, err := ioutil.ReadFile(kubebenchYAML)
+	jobYAML, err := embedYAMLs(kubebenchYAML)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	decoder := yaml.NewYAMLOrJSONDecoder(bytes.NewReader(jobYAML), len(jobYAML))
 	job := &batchv1.Job{}
 	if err := decoder.Decode(job); err != nil {
-		return err
+		return "", err
 	}
+	jobName := job.GetName()
 	job.Spec.Template.Spec.Containers[0].Image = kubebenchImg
 	job.Spec.Template.Spec.Containers[0].Args = []string{"--json"}
 
 	_, err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Create(ctx, job, metav1.CreateOptions{})
 
-	return err
+	return jobName, err
 }
 
 func findPodForJob(ctx context.Context, clientset *kubernetes.Clientset, jobName string, duration time.Duration) (*apiv1.Pod, error) {
