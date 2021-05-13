@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policyreport
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: policyreport
+  template:
+    metadata:
+      labels:
+        name: policyreport
+    spec:
+      containers:
+      - name: policyreport
+        image: mritunjay394/policyreport
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /usr/bin/kubectl
+            name: kubectl-binary
+            readOnly: true
+          - mountPath: /root/.kube/config
+            name: kubectl-config
+            readOnly: true
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 3000
+      volumes:
+        - name: kubectl-binary
+          hostPath:
+            path: /usr/bin/kubectl
+        - name: kubectl-config
+          hostPath:
+            path: /root/.kube/config
