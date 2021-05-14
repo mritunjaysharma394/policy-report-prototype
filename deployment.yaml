@@ -16,7 +16,6 @@ spec:
       containers:
       - name: policyreport
         image: mritunjay394/policyreport
-        imagePullPolicy: IfNotPresent
         resources:
           limits:
             memory: "128Mi"

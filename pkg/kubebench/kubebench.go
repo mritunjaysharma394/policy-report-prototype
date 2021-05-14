@@ -16,15 +16,28 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	yaml "k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func getClientSet(kubeconfig string) (*kubernetes.Clientset, error) {
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
-	if err != nil {
-		panic(err)
+func getClientSet(kubeconfigPath string) (*kubernetes.Clientset, error) {
+	var kubeconfig *rest.Config
+
+	if kubeconfigPath != "" {
+		config, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to load kubeconfig from %s: %v", kubeconfigPath, err)
+		}
+		kubeconfig = config
+	} else {
+		config, err := rest.InClusterConfig()
+		if err != nil {
+			return nil, fmt.Errorf("unable to load in-cluster config: %v", err)
+		}
+		kubeconfig = config
 	}
-	clientset, err := kubernetes.NewForConfig(config)
+
+	clientset, err := kubernetes.NewForConfig(kubeconfig)
 	if err != nil {
 		panic(err)
 	}
