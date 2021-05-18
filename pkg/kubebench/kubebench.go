@@ -18,28 +18,25 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/klog"
 )
 
 func getClientSet(kubeconfigPath string) (*kubernetes.Clientset, error) {
 	var kubeconfig *rest.Config
 
-	if kubeconfigPath != "" {
-		config, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
+	cfg, err := rest.InClusterConfig()
+	if err != nil {
+		cfg, err = clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 		if err != nil {
-			return nil, fmt.Errorf("unable to load kubeconfig from %s: %v", kubeconfigPath, err)
+			klog.Fatalf("Error building kubeconfig: %s", err.Error())
+			return nil, err
 		}
-		kubeconfig = config
-	} else {
-		config, err := rest.InClusterConfig()
-		if err != nil {
-			return nil, fmt.Errorf("unable to load in-cluster config: %v", err)
-		}
-		kubeconfig = config
 	}
+	kubeconfig = cfg
 
 	clientset, err := kubernetes.NewForConfig(kubeconfig)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	return clientset, nil
@@ -48,6 +45,9 @@ func getClientSet(kubeconfigPath string) (*kubernetes.Clientset, error) {
 func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.Duration) (*kubebench.OverallControls, error) {
 
 	clientset, err := getClientSet(kubeconfig)
+	if err != nil {
+		return nil, err
+	}
 	var jobName string
 	jobName, err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
 	if err != nil {
@@ -59,9 +59,7 @@ func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.
 		return nil, err
 	}
 
-	output := getPodLogs(context.TODO(), clientset, p)
-
-	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
+	output, err := getPodLogs(context.TODO(), clientset, jobName, p)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +74,7 @@ func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.
 }
 
 func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) (string, error) {
-	//jobYAML, err := ioutil.ReadFile(kubebenchYAML)
+
 	jobYAML, err := embedYAMLs(kubebenchYAML)
 	if err != nil {
 		return "", err
@@ -127,7 +125,7 @@ func findPodForJob(ctx context.Context, clientset *kubernetes.Clientset, jobName
 
 					if cp.Status.Phase == apiv1.PodFailed {
 						fmt.Printf("pod (%s) - %s - retrying...\n", cp.Name, cp.Status.Phase)
-						fmt.Print(getPodLogs(ctx, clientset, &cp))
+						fmt.Print(getPodLogs(ctx, clientset, jobName, &cp))
 						failedPods[cp.Name] = struct{}{}
 						break podfailed
 					}
@@ -137,22 +135,25 @@ func findPodForJob(ctx context.Context, clientset *kubernetes.Clientset, jobName
 	}
 }
 
-func getPodLogs(ctx context.Context, clientset *kubernetes.Clientset, pod *apiv1.Pod) string {
+func getPodLogs(ctx context.Context, clientset *kubernetes.Clientset, jobName string, pod *apiv1.Pod) (string, error) {
 	podLogOpts := corev1.PodLogOptions{}
 	req := clientset.CoreV1().Pods(pod.Namespace).GetLogs(pod.Name, &podLogOpts)
 	podLogs, err := req.Stream(ctx)
 	if err != nil {
-		return "getPodLogs - error in opening stream"
+		return "", err
 	}
 	defer podLogs.Close()
 
 	buf := new(bytes.Buffer)
 	_, err = io.Copy(buf, podLogs)
 	if err != nil {
-		return "getPodLogs - error in copy information from podLogs to buf"
+		return "", err
 	}
-
-	return buf.String()
+	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
 
 func convert(jsonString string) (*kubebench.OverallControls, error) {

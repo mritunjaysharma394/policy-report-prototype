@@ -9,6 +9,7 @@ require (
 	k8s.io/apimachinery v0.20.5
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/code-generator v0.20.1
+	k8s.io/klog v0.3.3 // indirect
 	sigs.k8s.io/controller-runtime v0.8.3
 )
 

@@ -13,25 +13,21 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/retry"
+	"k8s.io/klog"
 )
 
 func Write(r *policyreport.PolicyReport, namespace string, kubeconfigPath string) (*policyreport.PolicyReport, error) {
 	var kubeconfig *rest.Config
 
-	if kubeconfigPath != "" {
-		config, err := clientcmd.BuildConfigFromFlags("", kubeconfigPath)
+	cfg, err := rest.InClusterConfig()
+	if err != nil {
+		cfg, err = clientcmd.BuildConfigFromFlags("", kubeconfigPath)
 		if err != nil {
-			return nil, fmt.Errorf("unable to load kubeconfig from %s: %v", kubeconfigPath, err)
+			klog.Fatalf("Error building kubeconfig: %s", err.Error())
+			return nil, err
 		}
-		kubeconfig = config
-	} else {
-		config, err := rest.InClusterConfig()
-		if err != nil {
-			return nil, fmt.Errorf("unable to load in-cluster config: %v", err)
-		}
-		kubeconfig = config
 	}
-
+	kubeconfig = cfg
 	clientset, err := client.NewForConfig(kubeconfig)
 	if err != nil {
 		return nil, err
