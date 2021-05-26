@@ -16,13 +16,16 @@ import (
 )
 
 var (
-	name          string
-	namespace     string
-	category      string
-	kubeconfig    string
-	kubebenchYAML string
-	kubebenchImg  string
-	timeout       time.Duration
+	name               string
+	namespace          string
+	category           string
+	kubeconfig         string
+	kubebenchYAML      string
+	kubebenchImg       string
+	kubebenchTargets   string
+	kubebenchVersion   string
+	kubebenchBenchmark string
+	timeout            time.Duration
 )
 
 func parseArguments() {
@@ -30,6 +33,9 @@ func parseArguments() {
 	flag.StringVar(&namespace, "namespace", "default", "namespace of the cluster")
 	flag.StringVar(&category, "category", "CIS Benchmarks", "category of the policy report")
 	flag.StringVar(&kubebenchYAML, "yaml", "job.yaml", "YAML for kube-bench job")
+	flag.StringVar(&kubebenchTargets, "kube-bench-targets", "master,node,etcd,policies", "targets for benchmark of kube-bench job")
+	flag.StringVar(&kubebenchVersion, "kube-bench-version", "", "specify the Kubernetes version for kube-bench job")
+	flag.StringVar(&kubebenchBenchmark, "kube-bench-benchmark", "", "specify the benchmark for kube-bench job")
 
 	kubebenchImg = *flag.String("kubebenchImg", "aquasec/kube-bench:latest", "kube-bench image used as part of this test")
 	timeout = *flag.Duration("timeout", 10*time.Minute, "Test Timeout")
@@ -47,7 +53,7 @@ func main() {
 	parseArguments()
 
 	//run kube-bench job
-	cis, err := kubebench.RunJob(kubeconfig, kubebenchYAML, kubebenchImg, timeout)
+	cis, err := kubebench.RunJob(kubeconfig, kubebenchYAML, kubebenchImg, kubebenchVersion, kubebenchBenchmark, kubebenchTargets, timeout)
 	if err != nil {
 		fmt.Printf("failed to run job of kube-bench: %v \n", err)
 		os.Exit(-1)

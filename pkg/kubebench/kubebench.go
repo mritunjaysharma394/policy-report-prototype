@@ -42,14 +42,14 @@ func getClientSet(kubeconfigPath string) (*kubernetes.Clientset, error) {
 	return clientset, nil
 
 }
-func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.Duration) (*kubebench.OverallControls, error) {
+func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg, kubebenchVersion, kubebenchBenchmark, kubebenchTargets string, timeout time.Duration) (*kubebench.OverallControls, error) {
 
 	clientset, err := getClientSet(kubeconfig)
 	if err != nil {
 		return nil, err
 	}
 	var jobName string
-	jobName, err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg)
+	jobName, err = deployJob(context.TODO(), clientset, kubebenchYAML, kubebenchImg, kubebenchVersion, kubebenchBenchmark, kubebenchTargets)
 	if err != nil {
 		return nil, err
 	}
@@ -64,6 +64,16 @@ func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.
 		return nil, err
 	}
 
+	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	err = clientset.CoreV1().Pods(apiv1.NamespaceDefault).Delete(context.TODO(), p.Name, metav1.DeleteOptions{})
+	if err != nil {
+		return nil, err
+	}
+
 	controls, err := convert(output)
 	if err != nil {
 		return nil, err
@@ -73,7 +83,7 @@ func RunJob(kubeconfig string, kubebenchYAML, kubebenchImg string, timeout time.
 
 }
 
-func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg string) (string, error) {
+func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYAML, kubebenchImg, kubebenchVersion, kubebenchBenchmark, kubebenchTargets string) (string, error) {
 
 	jobYAML, err := embedYAMLs(kubebenchYAML)
 	if err != nil {
@@ -88,7 +98,9 @@ func deployJob(ctx context.Context, clientset *kubernetes.Clientset, kubebenchYA
 	jobName := job.GetName()
 	job.Spec.Template.Spec.Containers[0].Image = kubebenchImg
 	job.Spec.Template.Spec.Containers[0].Args = []string{"--json"}
-
+	job.Spec.Template.Spec.Containers[0].Args = []string{"--version", kubebenchVersion}
+	job.Spec.Template.Spec.Containers[0].Args = []string{"--benchmark", kubebenchBenchmark}
+	job.Spec.Template.Spec.Containers[0].Args = []string{"run", "--targets", kubebenchTargets, "--json"}
 	_, err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Create(ctx, job, metav1.CreateOptions{})
 
 	return jobName, err
@@ -146,10 +158,6 @@ func getPodLogs(ctx context.Context, clientset *kubernetes.Clientset, jobName st
 
 	buf := new(bytes.Buffer)
 	_, err = io.Copy(buf, podLogs)
-	if err != nil {
-		return "", err
-	}
-	err = clientset.BatchV1().Jobs(apiv1.NamespaceDefault).Delete(context.TODO(), jobName, metav1.DeleteOptions{})
 	if err != nil {
 		return "", err
 	}
