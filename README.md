@@ -9,6 +9,7 @@ Building a prototype of Policy Report Generator. It aims to run a CIS benchmark 
 
 ### Steps
 
+#### Common steps
 ```sh
 # 1. clone the repository
 git clone https://github.com/mritunjaysharma394/policy-report-prototype.git
@@ -23,12 +24,29 @@ minikube start
 
 # 4. create a CustomResourceDefinition
 kubectl create -f crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
+```
+#### Steps to run in-cluster as a Cron-Job
+```sh
+# 5. Create Role, Role-Binding and Services
+kubectl create -f role.yaml -f rb.yaml -f service.yaml
 
+# 6. Create cron-job
+kubectl create -f cron-job.yaml 
+
+# 7. Watch the jobs
+kubectl get jobs --watch
+
+# 8. check policyreports created through the custom resource
+kubectl get policyreports
+```
+
+#### Steps to run outside-cluster 
+```sh
 # 5. Build
 make build
 
 # 6. Create policy report using
-./policyreport -name="sample-policy-report" -yaml="job.yaml" -namespace="default" -category="CIS Benchmarks"
+./policyreport -name="kube-bench" -kube-bench-targets="master,nodes" -yaml="job.yaml" -namespace="default" -category="CIS Benchmarks"
 
 # 7. check policyreports created through the custom resource
 kubectl get policyreports
