@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1alpha2
 
 import (
 	corev1 "k8s.io/api/core/v1"
@@ -64,6 +64,10 @@ type PolicyResultSeverity string
 
 // PolicyReportResult provides the result for an individual policy
 type PolicyReportResult struct {
+
+	// Source is an identifier for the policy engine that manages this report
+	// +optional
+	Source string `json:"source"`
 
 	// Policy is the name or identifier of the policy
 	Policy string `json:"policy"`
