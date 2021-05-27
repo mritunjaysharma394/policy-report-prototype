@@ -23,15 +23,15 @@ kind create cluster
 minikube start
 
 # 4. create a CustomResourceDefinition
-kubectl create -f crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
+kubectl create -f kubernetes/crd/v1alpha2/wgpolicyk8s.io_policyreports.yaml
 ```
 #### Steps to run in-cluster as a Cron-Job
 ```sh
 # 5. Create Role, Role-Binding and Services
-kubectl create -f role.yaml -f rb.yaml -f service.yaml
+kubectl create -f kubernetes/role.yaml -f kubernetes/rb.yaml -f kubernetes/service.yaml
 
 # 6. Create cron-job
-kubectl create -f cron-job.yaml 
+kubectl create -f kubernetes/cron-job.yaml 
 
 # 7. Watch the jobs
 kubectl get jobs --watch
